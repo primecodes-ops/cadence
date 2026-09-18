@@ -62,7 +62,12 @@ def callback(code: str):
     )
 
     top_artists = top_artists_response.json()
-    # return top_tracks
+
+    # Top 5 Artists
+    top5_artists_list = [item["name"] for item in top_artists["items"][:5]]
+
+    # All Top Artists
+    top_artists_list = [item["name"] for item in top_artists["items"]]
 
     # Decade breakdown
     # Flat-list of all track decades and the most dominance decade
@@ -72,6 +77,10 @@ def callback(code: str):
     ]
 
     decades = Counter(decades_list)
-    top_decade = decades.most_common(1)
+    top_decade = decades.most_common(1)[0][0]
 
-    return top_decade
+    return {
+        "All Top Artists": top_artists_list,
+        "Top 5 Artists": top5_artists_list,
+        "Most Dominant Decade": top_decade,
+    }
