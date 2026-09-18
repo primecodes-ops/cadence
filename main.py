@@ -2,6 +2,7 @@ from fastapi import FastAPI, status
 from fastapi.responses import RedirectResponse
 from urllib.parse import urlencode
 from dotenv import load_dotenv
+from collections import Counter
 import httpx
 import os
 
@@ -44,4 +45,33 @@ def callback(code: str):
     )
 
     result = response.json()
-    return result
+    access_token = result["access_token"]
+
+    # Returns user's top tracks
+    top_tracks_response = httpx.get(
+        "https://api.spotify.com/v1/me/top/tracks",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+
+    top_tracks = top_tracks_response.json()
+
+    # Returns user's top artists
+    top_artists_response = httpx.get(
+        "https://api.spotify.com/v1/me/top/artists?time_range=long_term&limit=20",
+        headers={"Authorization": f"Bearer {access_token}"},
+    )
+
+    top_artists = top_artists_response.json()
+    # return top_tracks
+
+    # Decade breakdown
+    # Flat-list of all track decades and the most dominance decade
+    decades_list = [
+        f"{int(item['album']['release_date'][0:4]) // 10 * 10}s"
+        for item in top_tracks["items"]
+    ]
+
+    decades = Counter(decades_list)
+    top_decade = decades.most_common(1)
+
+    return top_decade
