@@ -2,3 +2,7 @@ venv/
 .env
 .git/
 __pycache__/
+task-definition.json
+task-definition.example.json
+trust-policy.json
+*.md

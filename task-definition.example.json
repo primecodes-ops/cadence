@@ -1,0 +1,44 @@
+{
+  "family": "cadence-task",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::<AWS_ACCOUNT_ID>:role/cadenceExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "cadence",
+      "image": "<AWS_ACCOUNT_ID>.dkr.ecr.ap-southeast-2.amazonaws.com/cadence:latest",
+      "portMappings": [
+        {
+          "containerPort": 8000,
+          "protocol": "tcp"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "SPOTIFY_CLIENT_ID",
+          "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:<AWS_ACCOUNT_ID>:secret:cadence/spotify-client-id-XXXXXX"
+        },
+        {
+          "name": "SPOTIFY_CLIENT_SECRET",
+          "valueFrom": "arn:aws:secretsmanager:ap-southeast-2:<AWS_ACCOUNT_ID>:secret:cadence/spotify-client-secret-XXXXXX"
+        }
+      ],
+      "environment": [
+        {
+          "name": "SPOTIFY_REDIRECT_URI",
+          "value": "https://your-domain-or-ip/callback"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/cadence",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "cadence"
+        }
+      }
+    }
+  ]
+}
