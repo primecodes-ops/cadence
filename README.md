@@ -4,6 +4,8 @@ A Spotify-connected backend that analyzes your top tracks and surfaces a simple
 listening-history profile — built primarily as a hands-on vehicle for learning
 backend development, containerization, CI/CD, and AWS cloud deployment.
 
+Infrastructure is also fully defined as Terraform/IaC — see [cadence-terraform](../cadence-terraform).
+
 ## What it does
 
 - Authenticates with Spotify via OAuth 2.0 (Authorization Code flow)
